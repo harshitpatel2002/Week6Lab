@@ -27,10 +27,10 @@
             </form>
             <p style="color: red">${itemInvalid}</p>
             
-            <c:forEach items="${sessionItems}" var="item">
-                <p><input type="radio" name="${item}">${item}</p>
-            </c:forEach>
             <form action="ShoppingList" method="post">
+                <c:forEach items="${sessionItems}" var="item">
+                    <p><input type="radio" name="${item}" value="${item}">${item}</p>
+                </c:forEach>
                 <input type="hidden" name="action" value="delete">
                 <input type="submit" value="Delete">
             </form>

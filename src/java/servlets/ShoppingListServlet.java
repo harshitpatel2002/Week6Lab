@@ -94,17 +94,17 @@ public class ShoppingListServlet extends HttpServlet
         
         if (action.equals("delete"))
         {
-            if (request.getSession().getAttribute("sessionItems") == null)
+            ArrayList<String> items = (ArrayList<String>) session.getAttribute("sessionItems");
+            int count = 0;
+            if (items.isEmpty())
             {
                 request.setAttribute("noDel", "No items to delete. Enter the items first");
                 getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
                     .forward(request, response);
-                return;
             }
             else   
             {
-                ArrayList<String> items = (ArrayList<String>) session.getAttribute("sessionItems");
-                //returns apple and banana
+                //returns apple, banana and cherry
                 
                 for (int i=0; i<items.size(); i++)
                 {
@@ -115,20 +115,31 @@ public class ShoppingListServlet extends HttpServlet
                         {
                             //Delete the items
                             items.remove(radio);
-        //                    Updating the session arraylist after deleteing the items from it.
-                            session.setAttribute("sessionItems", items);
+                            i--;
+                            count++;
                             break;
                         }
                     }  
                 }
-                getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
-                            .forward(request, response);
-//                else{
-//                    request.setAttribute("noDel", "No items has been selected for deletion");
-//                    getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
-//                    .forward(request, response);
-//                }
+                session.setAttribute("sessionItems", items);
+                if (items.isEmpty())
+                {
+                    request.setAttribute("noDel", "All items deleted.");
+                }
+                else
+                {
+                    if (count > 1) 
+                    {
+                        request.setAttribute("noDel", count+" items deleted.");
+                    }
+                    else
+                    {
+                        request.setAttribute("noDel", count+" item deleted.");
+                    }
+                }
             }
+            getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
+                .forward(request, response);
         }
     }
 
